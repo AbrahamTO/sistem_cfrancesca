@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="text-center">Editar zapato {{ zapato.codigo }}</h1>
+
+  {{error}}
+
+  <form method="POST" class="needs-validation mx-auto">
+    {% csrf_token %}
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        {{form}}
+      </div>  
+    </div>  
+
+    <div class="row justify-content-center mt-2">
+      <div class="col-md-4">
+        <button class="btn btn-primary btn-sm">
+          Actualizar
+        </button>
+      </div>  
+    </div>  
+  </form>
+
+  <form action="{% url 'sold_shoes' zapato.codigo %}" method="POST" class="mx-auto mt-2">
+    {% csrf_token %}
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <button class="btn btn-success btn-sm">
+          Marcar vendido
+        </button>
+      </div>  
+    </div> 
+  </form>
+{% endblock %}

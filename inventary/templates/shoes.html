@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between">
+  <h1 class="col-md-4 mb-4">Zapatos</h1>
+  <div class="col-sm-4">
+      <div class="input-group">
+          <input type="text" id="search" class="form-control" placeholder="Buscar por modelo/caracteristicas o categoria">
+      </div>
+  </div>
+</div>
+
+
+
+  <div class="table-responsive">
+    <table id="shoes" class="table table-bordered table-striped table-md mx-auto">
+      <thead class="thead-dark">
+        <tr>
+          <th>#</th>
+          <th>Color</th>
+          <th>Talla</th>
+          <th>Modelo</th>
+          <th>Características</th>
+          <th>Taco</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Fecha de venta</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for zapato in zapatos %}
+          <tr>
+            <td>{{ zapato.codigo }}</td>
+            <td>{{ zapato.color }}</td>
+            <td>{{ zapato.talla }}</td>
+            <td>{{ zapato.modelo }}</td>
+            <td>{{ zapato.caracteristicas }}</td>
+            <td>{{ zapato.taco }}</td>
+            <td>{{ zapato.categoria }}</td>
+            <td>S/. {{ zapato.precio }}</td>
+            <td>{{ zapato.fecha_vendida|date:'M j Y H:i' }}</td>
+            <td>
+                <a href="{% url 'edit_shoes' zapato.codigo %}" class="btn btn-primary btn-sm">Editar</a>
+                <form action="{% url 'delete_shoes' zapato.codigo %}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este zapato?');" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                </form>
+                
+            </td>
+          </tr>
+        {% endfor %}
+        <script>
+          document.getElementById('search').addEventListener('keyup', function() {
+              var input, filter, table, tr, tdModelo, tdCaracteristicas, tdCategoria, i, txtModelo, txtCaracteristicas, txtCategoria;
+              input = document.getElementById('search');
+              filter = input.value.toUpperCase();
+              table = document.getElementById('shoes');
+              tr = table.getElementsByTagName('tr');
+      
+              for (i = 0; i < tr.length; i++) {
+                  tdModelo = tr[i].getElementsByTagName('td')[3];
+                  tdCaracteristicas = tr[i].getElementsByTagName('td')[4];
+                  tdCategoria = tr[i].getElementsByTagName('td')[6];
+      
+                  if (tdModelo && tdCaracteristicas && tdCategoria) {
+                      txtModelo = tdModelo.textContent || tdModelo.innerText;
+                      txtCaracteristicas = tdCaracteristicas.textContent || tdCaracteristicas.innerText;
+                      txtCategoria = tdCategoria.textContent || tdCategoria.innerText;
+      
+                      if (txtModelo.toUpperCase().indexOf(filter) > -1 || txtCaracteristicas.toUpperCase().indexOf(filter) > -1 || txtCategoria.toUpperCase().indexOf(filter) > -1) {
+                          tr[i].style.display = '';
+                      } else {
+                          tr[i].style.display = 'none';
+                      }
+                  }
+              }
+          });
+      </script>
+      </tbody>
+
+    </table>
+  </div>
+
+{% endblock %}
